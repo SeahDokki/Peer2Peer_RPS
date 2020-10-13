@@ -1,0 +1,29 @@
+{
+  "name": "Peer2Peer_RPS",
+  "version": "1.0.0",
+  "description": "Rock Paper Scissors P2P",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeahDokki/Peer2Peer_RPS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SeahDokki/Peer2Peer_RPS/issues"
+  },
+  "homepage": "https://github.com/SeahDokki/Peer2Peer_RPS#readme",
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0",
+    "uuid": "^8.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
