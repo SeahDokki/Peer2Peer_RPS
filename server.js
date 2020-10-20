@@ -25,6 +25,10 @@ app.get('/game/:party', (req, res) => {
 })
 
 io.on('connection', socket => {
+    let date = new Date();
+    let timestamp = date.getTime();
+
+    socket.emit('ping', timestamp)
     socket.on('join-party', (partyId, userId) => {
         socket.join(partyId)
         console.log('caca')

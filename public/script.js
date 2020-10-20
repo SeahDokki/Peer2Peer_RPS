@@ -13,7 +13,7 @@ $(document).ready(function(){
         let user = getUser();
         let partyId = $('#partyId_input').val();
         let userId = user.id;
-        socket.emit('join-party',partyId ,userId);
+        joinParty(user.id, partyId);
         window.location.href = "game/"+partyId;
     })
 
@@ -39,6 +39,12 @@ $(document).ready(function(){
             sessionStorage.setItem('user', JSON.stringify(user));
             document.getElementById('loginFormContainer').remove();
             document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
+    }
+
+    function joinParty(userId = null, partyId)
+    {
+        userId = (userId) ? userId : createUser('Guest').id;
+        socket.emit('join-party',partyId ,userId);
     }
 
     $('#btnLoginValid').click( (e)=>{
@@ -71,6 +77,12 @@ $(document).ready(function(){
     socket.on('user-connected', userId => {
         console.log('User joined: ' + userId)
     })
+
+    socket.on('ping',(timestamp)=>{
+        let date = new Date();
+        let currTime = date.getTime();
+        console.log((currTime - timestamp) + ' ms');
+    });
 
 });
 
