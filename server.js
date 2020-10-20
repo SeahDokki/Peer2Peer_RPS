@@ -1,9 +1,10 @@
 const express = require('express')
 const app = express()
 const server = require('http').Server(app)
-const io = require('socket.io')(server)
+const io = require('socket.io').listen(server)
 const { v4: uuidv4 } = require('uuid')
 const mustacheExpress = require('mustache-express')
+const { connected } = require('process')
 
 app.engine('mustache', mustacheExpress())
 
@@ -21,7 +22,8 @@ app.get('/:party', (req, res) => {
 
 io.on('connection', socket => {
     socket.on('join-party', (partyId, userId) => {
-        console.log(partyId, userId)
+        socket.join(partyId)
+        socket.to(partyId).emit('user-connected', userId)
     })
 })
 
