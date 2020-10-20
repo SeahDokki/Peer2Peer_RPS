@@ -4,10 +4,6 @@ $(document).ready(function(){
      */
     $('.modal').modal();
 
-    /**
-     * Default value
-     */
-    sessionStorage.setItem('username', 'guest_' + (Math.floor(Math.random() * 9999) + 1000));
 
     /**
      * SocketIo Related content
@@ -21,15 +17,43 @@ $(document).ready(function(){
         socket.emit('join-party',partyId ,userId);
     })
 
+    function createUser(username)
+    {
+        let user = Object();
+            user.username = username
+            user.id = user.username + '#' +(Math.floor(Math.random() * 9999) + 1000)
+        sessionStorage.setItem('user', JSON.stringify(user));
+        return user;
+    }
+
+    function login()
+    {
+        let username = $('#usernameInput').val();
+        if(username.lenght > 2)
+            createUser(username);
+        else
+            createUser("Guest");
+
+            sessionStorage.setItem('user', JSON.stringify(user));
+            document.getElementById('loginFormContainer').remove();
+            document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
+
+
+    }
     $('#btnLoginValid').click( (e)=>{
         e.preventDefault();
-        let user = Object();
-            user.username = $('#usernameInput').val();
-            user.id = user.username+'#'+(Math.floor(Math.random() * 9999) + 1000);
-        sessionStorage.setItem('user', JSON.stringify(user));
-        document.getElementById('loginFormContainer').remove();
-        document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
+        login();
     });
+
+    document.addEventListener('keydown', (key) => {
+        if(key.keyCode === 13)
+        {
+            if($('#usernameInput').focus())
+            {
+                login();
+            }
+        }
+    })
 });
 
 socket.on('user-connected', userId => {
