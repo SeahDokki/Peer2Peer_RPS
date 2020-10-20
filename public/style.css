@@ -1,0 +1,60 @@
+html
+{
+    font-family: Verdana, sans-serif;
+}
+
+body
+{
+    background-image: url('background.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+#MENU
+{
+    display:inline-flex;
+}
+
+#MAIN
+{
+    position: relative;
+}
+
+.menu_opt
+{
+    margin: 5px;
+}
+
+#APP
+{
+    margin-top: 5vh;
+}
+
+#joinInputModal
+{
+    min-height: 200px !important;
+}
+
+#loginFormContainer
+{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(0,0,0,.5);
+    z-index: 999;
+    top:0;
+    left:0;
+}
+
+#loginForm
+{
+    height: 200px;
+    width: 500px;
+    margin-top: 45vh;
+    padding: 5px;
+}
+
+#loginForm input
+{
+    width: 70%;
+}
