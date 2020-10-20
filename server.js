@@ -13,10 +13,14 @@ app.set('views', __dirname + '/views');
 app.use(express.static('public'))
 
 app.get('/', (req, res) => {
+    res.render('home')
+})
+
+app.get('/game', (req, res) => {
     res.redirect(`/${uuidv4()}`)
 })
 
-app.get('/:party', (req, res) => {
+app.get('/game/:party', (req, res) => {
     res.render('party', {partyId: req.params.party})
 })
 

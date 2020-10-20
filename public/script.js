@@ -31,3 +31,7 @@ $(document).ready(function(){
         document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
     });
 });
+
+socket.on('user-connected', userId => {
+    console.log('User joined: ' + userId)
+})
