@@ -4,14 +4,13 @@ $(document).ready(function(){
      */
     $('.modal').modal();
 
-
     /**
      * SocketIo Related content
      */
     const socket = io('/');
 
     $('#btnJoinValid').click(()=>{
-        let user = JSON.parse(sessionStorage.getItem('user'));
+        let user = getUser();
         let partyId = $('#partyId_input').val();
         let userId = user.id;
         socket.emit('join-party',partyId ,userId);
@@ -26,20 +25,21 @@ $(document).ready(function(){
         return user;
     }
 
+    function getUser()
+    {
+        return JSON.parse(sessionStorage.getItem(('user')));
+    }
+
     function login()
     {
         let username = $('#usernameInput').val();
-        if(username.lenght > 2)
-            createUser(username);
-        else
-            createUser("Guest");
+        let user = (username.length >= 3) ? createUser(username) : createUser('Guest');
 
             sessionStorage.setItem('user', JSON.stringify(user));
             document.getElementById('loginFormContainer').remove();
             document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
-
-
     }
+
     $('#btnLoginValid').click( (e)=>{
         e.preventDefault();
         login();
@@ -53,9 +53,26 @@ $(document).ready(function(){
                 login();
             }
         }
+    });
+
+    if(getUser())
+    {
+        let user = getUser();
+        document.getElementById('loginFormContainer').remove();
+        document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
+    }
+
+
+    /**
+     * Server related stuff
+     */
+
+    socket.on('user-connected', userId => {
+        console.log('User joined: ' + userId)
     })
+
 });
 
-socket.on('user-connected', userId => {
-    console.log('User joined: ' + userId)
-})
+
+
+
