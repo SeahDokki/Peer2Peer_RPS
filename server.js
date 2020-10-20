@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/game', (req, res) => {
-    res.redirect(`/${uuidv4()}`)
+    res.redirect(`/game/${uuidv4()}`)
 })
 
 app.get('/game/:party', (req, res) => {
