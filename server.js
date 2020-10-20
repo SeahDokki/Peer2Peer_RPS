@@ -27,6 +27,7 @@ app.get('/game/:party', (req, res) => {
 io.on('connection', socket => {
     socket.on('join-party', (partyId, userId) => {
         socket.join(partyId)
+        console.log('caca')
         socket.to(partyId).emit('user-connected', userId)
     })
 })
