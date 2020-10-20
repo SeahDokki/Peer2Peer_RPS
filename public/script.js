@@ -14,6 +14,7 @@ $(document).ready(function(){
         let partyId = $('#partyId_input').val();
         let userId = user.id;
         socket.emit('join-party',partyId ,userId);
+        window.location.href = "game/"+partyId;
     })
 
     function createUser(username)
