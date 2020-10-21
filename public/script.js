@@ -7,13 +7,13 @@ $(document).ready(function(){
     /**
      * SocketIo Related content
      */
-    const socket = io('/');
+    const socket = io('/game');
 
     $('#btnJoinValid').click(()=>{
         let user = getUser();
         let partyId = $('#partyId_input').val();
         let userId = user.id;
-        joinParty(user.id, partyId);
+        joinParty(userId, partyId);
         window.location.href = "game/"+partyId;
     })
 
@@ -74,8 +74,8 @@ $(document).ready(function(){
      * Server related stuff
      */
 
-    socket.on('user-connected', userId => {
-        console.log('User joined: ' + userId)
+    socket.on('user-connected', (userId) => {
+        console.log('User joined: ' + userId);
     })
 
     socket.on('ping',(timestamp)=>{
