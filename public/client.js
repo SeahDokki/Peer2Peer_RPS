@@ -73,30 +73,58 @@ $(document).ready(function(){
      * On Click Button handler
      */
 
-    $('#btnCreate').on('click', () => {
+    $('#btnCreate').on('click', (event) => {
+        event.preventDefault();
         console.log('Creating new lobby...');
-        socket.emit('createLobby', { user : getUser() });
+        sessionStorage.setItem('creatingGame', true);
+        window.location.href = '/game/';
     });
 
 
     /**
-     * Server related stuff
+     * Party related stuff
      */
 
-    socket.on('userJoined', (userId) => {
-        console.log('packet 3');
-        console.log('User joined: ' + userId);
-    })
+    if(window.location.href.includes('/game/'))
+    {
+        console.log('Loading party...')
+        let partyId = window.location.href.split('/')[4];
+        // Owner part
+        if(sessionStorage.getItem('creatingGame'))
+        {
+            let nemesis;
+            console.log('Logged as owner ! \n Creating the party...');
+            sessionStorage.removeItem('creatingGame');
+            socket.emit('createParty', getUser());
+            socket.emit('sendOwnerInfo', getUser(), partyId);
 
-    socket.on('userInfoReceived', ()=>{
-        window.location.href = "/game";
-    });
+            socket.on('userConnect', (user) => {
+                socket.emit('sendOwnerInfo', getUser(), partyId);
+                console.log(user.username + ' connected !');
+                nemesis = user;
+                console.log('You\'re matching agains\'t '+nemesis.username);
+            });
+        }
+        // User part
+        else
+        {
+            let user = getUser();
+            let nemesis;
+            console.log(user);
+            console.log('Logged as player, trying to join the room...');
+            socket.emit('joinParty', user, partyId);
+            socket.on('partyJoined', ()=>{
+                console.log('Party joined sucessfully');
+            });
+            socket.on('receiveOwnerInfo', owner => {
+                nemesis = owner;
+                console.log('You\'re matching agains\'t '+nemesis.username);
+            });
+        }
 
-    socket.on('ping', timestamp => {
-        let date = new Date();
-        let currTime = date.getTime();
-        console.log((currTime - timestamp) + ' ms');
-    });
+        // everyone
+        socket.on('');
+    }
 });
 
 

@@ -12,41 +12,57 @@ app.set('view engine', 'mustache')
 app.set('views', __dirname + '/views');
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-    res.render('home', { showMenu : true, showLogin: true });
-})
+
+app.get('/', (req,res)=>{
+    res.render('home', {
+        showMenu: true,
+    });
+});
 
 app.get('/game', (req, res) => {
-    let uuid = uuidv4();
-    res.render('home', { showParty : true, partyId: uuid, showLogin: false });
-})
+    res.redirect(`/game/${uuidv4()}`);
+});
 
 app.get('/game/:party', (req, res) => {
-    res.render('home', { showParty : true, partyId: req.params.party, showLogin: false });
-})
+    let partyId = req.params.party,
+        users = [],
+        owner = null
 
-io.on('connection', (socket) => {
-    console.log('new user on');
-    let date = new Date();
-    let timestamp = date.getTime();
-    let currentUser;
+    io.on('connection', socket => {
+        socket.on('createParty', user => {
+            owner = user;
+            socket.join(partyId);
+            socket.emit('roomCreated');
+        });
 
-    //socket.emit('ping', timestamp);
+        socket.on('joinParty', (user, partyId) => {
+            console.log(user);
+           console.log('User ' + user.id + ' is joining a party');
+           socket.join(partyId);
+           socket.to(partyId).broadcast.emit('userConnect', user);
+           socket.emit('partyJoined');
+        });
 
-    socket.on('createLobby', (res) => {
-        currentUser = res.user;
-        socket.emit('userInfoReceived');
+        socket.on('sendOwnerInfo', (user, partyId) => {
+           socket.to(partyId).broadcast.emit('receiveOwnerInfo', user);
+        });
+
+        socket.on('receiveOwnerInfo', ownerInfo => {
+            owner = ownerInfo;
+        });
+
+
+        socket.on('disconnect', () => {
+            socket.to(partyId).broadcast.emit('userLeave');
+            socket.leave(partyId);
+        });
     });
 
-    socket.on('joinParty', (partyId, userId) => {
-        socket.join(partyId);
-        console.log('packet 2');
-        socket.to(partyId).broadcast.emit('userJoined', userId);
+    res.render('home', {
+        showParty: true,
+        absolutePathing: true,
+        partyId: partyId
     });
+});
 
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    })
-})
-
-server.listen(3000)
+server.listen(3000);
