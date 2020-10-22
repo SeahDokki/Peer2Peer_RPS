@@ -7,14 +7,13 @@ $(document).ready(function(){
     /**
      * SocketIo Related content
      */
-    const socket = io('/game');
+    const socket = io('/');
 
     $('#btnJoinValid').click(()=>{
         let user = getUser();
         let partyId = $('#partyId_input').val();
         let userId = user.id;
         joinParty(userId, partyId);
-        window.location.href = "game/"+partyId;
     })
 
     function createUser(username)
@@ -44,6 +43,7 @@ $(document).ready(function(){
     function joinParty(userId = null, partyId)
     {
         userId = (userId) ? userId : createUser('Guest').id;
+        console.log('packet 1 '+partyId);
         socket.emit('join-party',partyId ,userId);
     }
 
@@ -69,21 +69,34 @@ $(document).ready(function(){
         document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
     }
 
+    /**
+     * On Click Button handler
+     */
+
+    $('#btnCreate').on('click', () => {
+        console.log('Creating new lobby...');
+        socket.emit('createLobby', { user : getUser() });
+    });
+
 
     /**
      * Server related stuff
      */
 
-    socket.on('user-connected', (userId) => {
+    socket.on('userJoined', (userId) => {
+        console.log('packet 3');
         console.log('User joined: ' + userId);
     })
 
-    socket.on('ping',(timestamp)=>{
+    socket.on('userInfoReceived', ()=>{
+        window.location.href = "/game";
+    });
+
+    socket.on('ping', timestamp => {
         let date = new Date();
         let currTime = date.getTime();
         console.log((currTime - timestamp) + ' ms');
     });
-
 });
 
 
