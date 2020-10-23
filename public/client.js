@@ -14,6 +14,7 @@ $(document).ready(function(){
         let partyId = $('#partyId_input').val();
         let userId = user.id;
         joinParty(userId, partyId);
+        window.location.href = '/game/' + partyId.trim();
     })
 
     function createUser(username)
@@ -102,7 +103,7 @@ $(document).ready(function(){
                 socket.emit('sendOwnerInfo', getUser(), partyId);
                 console.log(user.username + ' connected !');
                 nemesis = user;
-                console.log('You\'re matching agains\'t '+nemesis.username);
+                console.log('You\'re dueling against '+nemesis.username);
             });
         }
         // User part
@@ -118,7 +119,7 @@ $(document).ready(function(){
             });
             socket.on('receiveOwnerInfo', owner => {
                 nemesis = owner;
-                console.log('You\'re matching agains\'t '+nemesis.username);
+                console.log('You\'re dueling against '+nemesis.username);
             });
         }
 

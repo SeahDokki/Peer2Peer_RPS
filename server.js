@@ -22,12 +22,28 @@ app.get('/game', (req, res) => {
     res.redirect(`/game/${uuidv4()}`);
 });
 
+let partyId;
 app.get('/game/:party', (req, res) => {
-    let partyId = req.params.party,
+    partyId = req.params.party,
         users = [],
         owner = null
 
+    
+
+    res.render('home', {
+        showParty: true,
+        absolutePathing: true,
+        partyId: partyId
+    });
+});
+
+let connectionsLimit = 2;
+let connectCounter = 0;
+
     io.on('connection', socket => {
+        connectCounter++;
+        console.log('User connected : ' + connectCounter);
+
         socket.on('createParty', user => {
             owner = user;
             socket.join(partyId);
@@ -36,32 +52,32 @@ app.get('/game/:party', (req, res) => {
 
         socket.on('joinParty', (user, partyId) => {
             console.log(user);
-           console.log('User ' + user.id + ' is joining a party');
-           socket.join(partyId);
-           socket.to(partyId).broadcast.emit('userConnect', user);
-           socket.emit('partyJoined');
+            console.log('User ' + user.id + ' is joining a party');
+            socket.join(partyId);
+            socket.to(partyId).broadcast.emit('userConnect', user);
+            socket.emit('partyJoined');
         });
 
         socket.on('sendOwnerInfo', (user, partyId) => {
-           socket.to(partyId).broadcast.emit('receiveOwnerInfo', user);
+            socket.to(partyId).broadcast.emit('receiveOwnerInfo', user);
         });
 
         socket.on('receiveOwnerInfo', ownerInfo => {
             owner = ownerInfo;
         });
 
+        if (io.engine.clientsCount > connectionsLimit) {
+            socket.emit('err', { message: 'reach the limit of connections' })
+            socket.disconnect()
+            console.log('Disconnected...')
+            return
+        }
 
         socket.on('disconnect', () => {
             socket.to(partyId).broadcast.emit('userLeave');
             socket.leave(partyId);
+            connectCounter--;
         });
     });
-
-    res.render('home', {
-        showParty: true,
-        absolutePathing: true,
-        partyId: partyId
-    });
-});
 
 server.listen(3000);
