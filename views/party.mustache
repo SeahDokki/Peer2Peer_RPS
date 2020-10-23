@@ -1,1 +1,27 @@
-{{ partyId }}
+Code :
+ <!-- The text field -->
+<input type="text" value={{ partyId }} id="codeParty"> 
+
+<div class="tooltip">
+    <button onclick="copyToClipboard()" onmouseout="outFunc()">
+        <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+        Copy code
+    </button>
+</div>
+
+<script>
+    function copyToClipboard() {
+        var copyText = document.getElementById("codeParty");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        
+        var tooltip = document.getElementById("myTooltip");
+        tooltip.innerHTML = "Copied: " + copyText.value;
+    }
+
+    function outFunc() {
+        var tooltip = document.getElementById("myTooltip");
+        tooltip.innerHTML = "Copy to clipboard";
+    }
+</script>
