@@ -83,7 +83,6 @@ let connectCounter = 0;
         socket.on('disconnect', () => {
             socket.to(partyId).broadcast.emit('userLeave');
             socket.leave(partyId);
-            console.log(connectCounter);
         });
     });
 
