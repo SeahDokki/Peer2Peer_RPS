@@ -4,7 +4,6 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const { v4: uuidv4 } = require('uuid')
 const mustacheExpress = require('mustache-express')
-const { connected } = require('process')
 
 app.engine('mustache', mustacheExpress());
 
