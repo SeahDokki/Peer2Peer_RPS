@@ -41,12 +41,14 @@ let connectionsLimit = 2;
 let connectCounter = 0;
 
     io.on('connection', socket => {
-        connectCounter++;
-        console.log('User connected : ' + connectCounter);
-
         socket.on('createParty', user => {
             owner = user;
             socket.join(partyId);
+            io.in(partyId).clients((error, clients) => {
+                if (error) throw error;
+                connectCounter = clients.length;
+                console.log(connectCounter);
+            });
             socket.emit('roomCreated');
         });
 
@@ -54,6 +56,11 @@ let connectCounter = 0;
             console.log(user);
             console.log('User ' + user.id + ' is joining a party');
             socket.join(partyId);
+            io.in(partyId).clients((error, clients) => {
+                if (error) throw error;
+                connectCounter = clients.length;
+                console.log(connectCounter);
+            });
             socket.to(partyId).broadcast.emit('userConnect', user);
             socket.emit('partyJoined');
         });
@@ -66,7 +73,7 @@ let connectCounter = 0;
             owner = ownerInfo;
         });
 
-        if (io.engine.clientsCount > connectionsLimit) {
+        if (connectCounter >= connectionsLimit) {
             socket.emit('err', { message: 'reach the limit of connections' })
             socket.disconnect()
             console.log('Disconnected...')
@@ -76,7 +83,7 @@ let connectCounter = 0;
         socket.on('disconnect', () => {
             socket.to(partyId).broadcast.emit('userLeave');
             socket.leave(partyId);
-            connectCounter--;
+            console.log(connectCounter);
         });
     });
 
