@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-const { v4: uuidv4 } = require('uuid');
+const { nanoid } = require("nanoid");
 const mustacheExpress = require('mustache-express');
 
 app.engine('mustache', mustacheExpress());
@@ -19,7 +19,7 @@ app.get('/', (req,res)=>{
 });
 
 app.get('/game', (req, res) => {
-    res.redirect(`/game/${uuidv4()}`);
+    res.redirect(`/game/${nanoid(6)}`);
 });
 
 let partyId;
