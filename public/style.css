@@ -107,7 +107,7 @@ body
       border: none;
       outline: none;
       cursor: pointer;
-      font-size: 2rem;
+      font-size: 5rem;
       transition: 100ms;
   }
 
@@ -126,4 +126,18 @@ body
 
   .score {
       margin-left: 1rem;
+  }
+
+  .message
+  {
+      font-size: 30px;
+      color: white;
+      font-family: Impact, sans-serif;
+  }
+
+  #countdown
+  {
+      font-family: Impact, sans-serif;
+      font-size: 76px;
+      color: white;
   }

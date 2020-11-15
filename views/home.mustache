@@ -29,6 +29,10 @@
                                 {{> party }}
                             {{/showParty}}
 
+                            {{#isBattleOn}}
+                                {{> battle }}
+                            {{/isBattleOn}}
+
                             {{#showMessage}}
                                 {{ message }}
                             {{/showMessage}}
