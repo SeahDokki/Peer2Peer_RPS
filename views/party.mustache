@@ -1,11 +1,11 @@
-Code :
+Code : {{ partyId }}
  <!-- The text field -->
-<input type="text" value={{ partyId }} id="codeParty"> 
+<input type="text" value="http://localhost:3000/game/{{ partyId }}" id="codeParty"> 
 
 <div class="tooltip">
     <button onclick="copyToClipboard()" onmouseout="outFunc()">
-        <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
-        Copy code
+        <span class="tooltiptext" id="myTooltip">Copier dans le presse-papier</span>
+        Copier
     </button>
 </div>
 

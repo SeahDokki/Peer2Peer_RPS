@@ -36,9 +36,9 @@ $(document).ready(function(){
         let username = $('#usernameInput').val();
         let user = (username.length >= 3) ? createUser(username) : createUser('Guest');
 
-            sessionStorage.setItem('user', JSON.stringify(user));
-            document.getElementById('loginFormContainer').remove();
-            document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
+        sessionStorage.setItem('user', JSON.stringify(user));
+        document.getElementById('loginFormContainer').remove();
+        document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
     }
 
     function joinParty(userId = null, partyId)
@@ -94,7 +94,7 @@ $(document).ready(function(){
         if(sessionStorage.getItem('creatingGame'))
         {
             let nemesis;
-            console.log('Logged as owner ! \n Creating the party...');
+            console.log('Logged as owner !\nCreating the party...');
             sessionStorage.removeItem('creatingGame');
             socket.emit('createParty', getUser());
             socket.emit('sendOwnerInfo', getUser(), partyId);
