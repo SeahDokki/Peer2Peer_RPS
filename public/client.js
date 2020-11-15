@@ -8,13 +8,19 @@ $(document).ready(function(){
      * SocketIo Related content
      */
     const socket = io('/');
+    const peer = new Peer(undefined, {
+        host: '/',
+        port: '3001'
+    });
 
-    $('#btnJoinValid').click(()=>{
-        let user = getUser();
-        let partyId = $('#partyId_input').val();
-        let userId = user.id;
-        joinParty(userId, partyId);
-        window.location.href = '/game/' + partyId.trim();
+    peer.on('open', userId => {
+        $('#btnJoinValid').click(()=>{
+            // let user = getUser();
+            let partyId = $('#partyId_input').val();
+            // let userId = user.id;
+            joinParty(userId, partyId);
+            window.location.href = '/game/' + partyId.trim();
+        })
     })
 
     function createUser(username)
@@ -41,11 +47,11 @@ $(document).ready(function(){
         document.getElementById('connectedAs').innerHTML = "<b>Connecté en tant que :</b> " + user.username;
     }
 
-    function joinParty(userId = null, partyId)
+    function joinParty(userId, partyId)
     {
-        userId = (userId) ? userId : createUser('Guest').id;
-        console.log('packet 1 '+partyId);
-        socket.emit('join-party',partyId ,userId);
+        // userId = (userId) ? userId : createUser('Guest').id;
+        // console.log('packet 1 '+partyId);
+        socket.emit('join-party', partyId, userId);
     }
 
     $('#btnLoginValid').click( (e)=>{
@@ -111,7 +117,7 @@ $(document).ready(function(){
         {
             let user = getUser();
             let nemesis;
-            console.log(user);
+            // console.log(user);
             console.log('Logged as player, trying to join the room...');
             socket.emit('joinParty', user, partyId);
             socket.on('partyJoined', ()=>{
