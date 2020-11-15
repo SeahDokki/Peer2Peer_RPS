@@ -40,50 +40,50 @@ app.get('/game/:party', (req, res) => {
 // let connectionsLimit = 2;
 // let connectCounter = 0;
 
-    io.on('connection', socket => {
-        socket.on('createParty', user => {
-            owner = user;
-            socket.join(partyId);
-            // io.in(partyId).clients((error, clients) => {
-            //     if (error) throw error;
-            //     connectCounter = clients.length;
-            //     console.log(connectCounter);
-            // });
-            socket.emit('roomCreated');
-        });
-
-        socket.on('joinParty', (user, partyId) => {
-            // console.log(user);
-            // console.log('User ' + user.id + ' is joining a party');
-            socket.join(partyId);
-            // io.in(partyId).clients((error, clients) => {
-            //     if (error) throw error;
-            //     connectCounter = clients.length;
-            //     console.log(connectCounter);
-            // });
-            socket.to(partyId).broadcast.emit('userConnect', user);
-            socket.emit('partyJoined');
-        });
-
-        socket.on('sendOwnerInfo', (user, partyId) => {
-            socket.to(partyId).broadcast.emit('receiveOwnerInfo', user);
-        });
-
-        socket.on('receiveOwnerInfo', ownerInfo => {
-            owner = ownerInfo;
-        });
-
-        // if (connectCounter >= connectionsLimit) {
-        //     socket.emit('err', { message: 'reach the limit of connections' })
-        //     socket.disconnect()
-        //     console.log('Disconnected...')
-        //     return
-        // }
-
-        socket.on('disconnect', () => {
-            socket.to(partyId).broadcast.emit('userLeave');
-            socket.leave(partyId);
-        });
+io.on('connection', socket => {
+    socket.on('createParty', user => {
+        owner = user;
+        socket.join(partyId);
+        // io.in(partyId).clients((error, clients) => {
+        //     if (error) throw error;
+        //     connectCounter = clients.length;
+        //     console.log(connectCounter);
+        // });
+        socket.emit('roomCreated');
     });
+
+    socket.on('joinParty', (user, partyId) => {
+        // console.log(user);
+        // console.log('User ' + user.id + ' is joining a party');
+        socket.join(partyId);
+        // io.in(partyId).clients((error, clients) => {
+        //     if (error) throw error;
+        //     connectCounter = clients.length;
+        //     console.log(connectCounter);
+        // });
+        socket.to(partyId).broadcast.emit('userConnect', user);
+        socket.emit('partyJoined');
+    });
+
+    socket.on('sendOwnerInfo', (user, partyId) => {
+        socket.to(partyId).broadcast.emit('receiveOwnerInfo', user);
+    });
+
+    socket.on('receiveOwnerInfo', ownerInfo => {
+        owner = ownerInfo;
+    });
+
+    // if (connectCounter >= connectionsLimit) {
+    //     socket.emit('err', { message: 'reach the limit of connections' })
+    //     socket.disconnect()
+    //     console.log('Disconnected...')
+    //     return
+    // }
+
+    socket.on('disconnect', () => {
+        socket.to(partyId).broadcast.emit('userLeave');
+        socket.leave(partyId);
+    });
+});
 
 server.listen(3000);
