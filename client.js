@@ -22,8 +22,10 @@ let opponent = {};
 function reset()
 {
     setTimeout(()=>{
-        $('#choices').find('button').prop('disabled', false);
+        $('#choices').find('button').removeProperty('disabled');
+        changeMessage('Nouvelle manche !');
     }, 1500);
+
 }
 
 function getResult(move, oppoMove)
