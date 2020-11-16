@@ -111,6 +111,7 @@ function onEvent(data)
         case 'onWin' :
             changeMessage(opponent.username+' à fait ' + opponent.lastmove +'. Il gagne cette partie');
             opponent.score++;
+            console.log(opponent.score)
             updateScore();
             break;
 
