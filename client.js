@@ -62,6 +62,7 @@ function getResult(move, oppoMove)
 
     myMove = undefined;
     opponent.move = undefined;
+    reset();
     return result
 }
 
