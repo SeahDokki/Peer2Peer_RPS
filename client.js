@@ -62,6 +62,7 @@ function getResult(move, oppoMove)
 
     myMove = undefined;
     opponent.move = undefined;
+    opponent.lastmove = oppoMove;
     reset();
     return result
 }
@@ -103,7 +104,7 @@ function onEvent(data)
             break;
 
         case 'onWin' :
-            changeMessage(opponent.username+' à gagner cette partie');
+            changeMessage(opponent.username+' à fait' + opponent.lastmove +'. Il gagne cette partie');
             break;
 
         case 'onDraw' :
