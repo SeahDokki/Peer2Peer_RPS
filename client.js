@@ -55,7 +55,9 @@ function getResult(move, oppoMove)
         if (result)
         {
             myScore++;
-            updateScore();
+            // updateScore();
+            $("#MyScore").html(myScore);
+            $("#OppoScore").html(opponent.score);
             changeMessage(opponent.username + ' à fait '+ oppoMove + '. Vous gagnez !!!');
         }
         else
