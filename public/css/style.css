@@ -5,7 +5,7 @@ html
 
 body
 {
-    background-image: url('background.png');
+    background-image: url('../background.png');
     background-size: cover;
     background-attachment: fixed;
 }
@@ -35,7 +35,7 @@ body
     min-height: 200px !important;
 }
 
-#loginFormContainer
+.formContainer
 {
     height: 100%;
     width: 100%;
@@ -46,15 +46,15 @@ body
     left:0;
 }
 
-#loginForm
+.form
 {
-    height: 200px;
+    min-height: 200px;
     width: 500px;
     margin-top: 45vh;
     padding: 5px;
 }
 
-#loginForm input
+.form input
 {
     width: 70%;
 }
@@ -140,4 +140,19 @@ body
       font-family: Impact, sans-serif;
       font-size: 76px;
       color: white;
+  }
+
+  #connectedAs
+  {
+      display: none;
+  }
+
+  #connectToPeerContainer
+  {
+      display: none;
+  }
+
+  #gameContainer
+  {
+      display: none;
   }
