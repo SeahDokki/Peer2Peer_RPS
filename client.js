@@ -27,6 +27,8 @@ function reset()
     setTimeout(()=>{
         $('#choices').find('button').prop('disabled', false);
         changeMessage('Nouvelle manche !');
+        myMove = undefined;
+        opponent.move = undefined;
     }, 1500);
 
 }
@@ -54,7 +56,7 @@ function getResult(move, oppoMove)
         }
         if (result)
         {
-            myScore++;
+            myScore += 1;
             updateScore();
             changeMessage(opponent.username + ' à fait '+ oppoMove + '. Vous gagnez !!!');
         }
@@ -66,11 +68,8 @@ function getResult(move, oppoMove)
         result = -1;
         changeMessage(opponent.username + ' à fait '+ oppoMove + '. C\'est une égalité !');
     }
-
-    myMove = undefined;
-    opponent.move = undefined;
-    opponent.lastmove = oppoMove;
     reset();
+    opponent.lastmove = oppoMove;
     return result
 }
 
@@ -112,7 +111,7 @@ function onEvent(data)
 
         case 'onWin' :
             changeMessage(opponent.username+' à fait ' + opponent.lastmove +'. Il gagne cette partie');
-            opponent.score++;
+            opponent.score += 1;
             console.log(opponent.score)
             updateScore();
             break;
