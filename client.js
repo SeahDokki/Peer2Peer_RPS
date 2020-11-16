@@ -11,6 +11,8 @@ let connectedAsField = document.getElementById('connectedAs');
 let connectToPeerContainer = document.getElementById('connectToPeerContainer');
 let btnValidConnect = document.getElementById('btnValidConnect');
 let peerIdInput = document.getElementById('peerIdInput');
+let OppoScoreConteiner = document.getElementById('OppoScore');
+let MyScoreContainer = document.getElementById('MyScore');
 
 
 // FIELDS
@@ -29,6 +31,7 @@ function reset()
         changeMessage('Nouvelle manche !');
         myMove = undefined;
         opponent.move = undefined;
+        isOpponentPlayedFirst = false;
     }, 1500);
 
 }
@@ -57,11 +60,13 @@ function getResult(move, oppoMove)
         if (result)
         {
             myScore += 1;
-            updateScore();
             changeMessage(opponent.username + ' à fait '+ oppoMove + '. Vous gagnez !!!');
         }
         else
+        {
+            opponent.score += 1;
             changeMessage(opponent.username + ' à fait '+ oppoMove + '. Vous perdez.....');
+        }
     }
     else
     {
@@ -69,6 +74,7 @@ function getResult(move, oppoMove)
         changeMessage(opponent.username + ' à fait '+ oppoMove + '. C\'est une égalité !');
     }
     reset();
+    updateScore();
     opponent.lastmove = oppoMove;
     return result
 }
@@ -80,8 +86,8 @@ function changeMessage(msg)
 
 function updateScore()
 {
-    $("#MyScore").html(myScore);
-    $("#OppoScore").html(opponent.score);
+    MyScoreContainer.innerHTML = myScore;
+    OppoScoreConteiner.innerHTML = opponent.score;
 }
 
 function onEvent(data)
@@ -111,9 +117,6 @@ function onEvent(data)
 
         case 'onWin' :
             changeMessage(opponent.username+' à fait ' + opponent.lastmove +'. Il gagne cette partie');
-            opponent.score += 1;
-            console.log(opponent.score)
-            updateScore();
             break;
 
         case 'onDraw' :
