@@ -18,7 +18,7 @@ let myID, username, myMove;
 let isOpponentPlayedFirst = false;
 let myScore = 0;
 let opponent = {
-    score = 0
+    score: 0
 };
 
 
