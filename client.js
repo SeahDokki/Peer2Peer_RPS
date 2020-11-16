@@ -36,15 +36,15 @@ function getResult(move, oppoMove)
     {
         switch (oppoMove)
         {
-            case 'rock':
-                result = (move === 'paper') ? 1 : 0;
+            case 'pierre':
+                result = (move === 'feuille') ? 1 : 0;
                 break;
 
-            case 'paper':
-                result = (move === 'scisor') ? 1 : 0;
+            case 'feuille':
+                result = (move === 'ciseaux') ? 1 : 0;
                 break;
-            case 'scisor':
-                result = (move === 'rock') ? 1 : 0;
+            case 'ciseaux':
+                result = (move === 'pierre') ? 1 : 0;
                 break;
             case 'none' :
                 result = 1
@@ -109,7 +109,7 @@ function onEvent(data)
             break;
 
         case 'onWin' :
-            changeMessage(opponent.username+' à fait' + opponent.lastmove +'. Il gagne cette partie');
+            changeMessage(opponent.username+' à fait ' + opponent.lastmove +'. Il gagne cette partie');
             opponent.score++;
             updateScore();
             break;
