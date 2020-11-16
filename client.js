@@ -16,6 +16,7 @@ let peerIdInput = document.getElementById('peerIdInput');
 // FIELDS
 let myID, username, myMove;
 let isOpponentPlayedFirst = false;
+let myScore = 0;
 let opponent = {};
 
 
@@ -50,7 +51,11 @@ function getResult(move, oppoMove)
                 break;
         }
         if (result)
+        {
+            myScore++;
+            updateScore();
             changeMessage(opponent.username + ' à fait '+ oppoMove + '. Vous gagnez !!!');
+        }
         else
             changeMessage(opponent.username + ' à fait '+ oppoMove + '. Vous perdez.....');
     }
@@ -105,6 +110,8 @@ function onEvent(data)
 
         case 'onWin' :
             changeMessage(opponent.username+' à fait' + opponent.lastmove +'. Il gagne cette partie');
+            opponent.score++;
+            updateScore();
             break;
 
         case 'onDraw' :
@@ -144,6 +151,10 @@ MyPeer.on('open', id => {
                     {
                         dataConnection.send({event: "onDraw"});
                     }
+                }
+                else
+                {
+                    changeMessage('En attente de ' + opponent.username);
                 }
             })
 
@@ -187,6 +198,10 @@ MyPeer.on('open', id => {
                     {
                         dataConnection.send({event: "onDraw"});
                     }
+                }
+                else
+                {
+                    changeMessage('En attente de ' + opponent.username);
                 }
             })
 
