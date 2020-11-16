@@ -15,13 +15,57 @@ let peerIdInput = document.getElementById('peerIdInput');
 
 // FIELDS
 let myID, username, myMove;
-
+let isOpponentPlayedFirst = false;
 let opponent = {};
 
-function getResult(myMove, oppoMove)
+
+function reset()
 {
-    // TODO Return TRUE if wins, FALSE if loose
-    return true
+    setTimeout(()=>{
+        $('#choices').find('button').prop('disabled', false);
+    }, 1500);
+}
+
+function getResult(move, oppoMove)
+{
+    let result = 0;
+    if (move !== oppoMove)
+    {
+        switch (oppoMove)
+        {
+            case 'rock':
+                result = (move === 'paper') ? 1 : 0;
+                break;
+
+            case 'paper':
+                result = (move === 'scisor') ? 1 : 0;
+                break;
+            case 'scisor':
+                result = (move === 'rock') ? 1 : 0;
+                break;
+            case 'none' :
+                result = 1
+                break;
+        }
+        if (result)
+            changeMessage(opponent.username + ' à fait '+ oppoMove + '. Vous gagnez !!!');
+        else
+            changeMessage(opponent.username + ' à fait '+ oppoMove + '. Vous perdez.....');
+    }
+    else
+    {
+        result = -1;
+        changeMessage(opponent.username + ' à fait '+ oppoMove + '. C\'est une égalité !');
+    }
+
+    myMove = undefined;
+    opponent.move = undefined;
+    return result
+}
+
+function changeMessage(msg)
+{
+    document.getElementById('gameMessage').innerHTML = msg;
 }
 
 function updateScore()
@@ -40,12 +84,31 @@ function onEvent(data)
             toastr.info('Vous jouez contre: '+opponent.username);
             $("#gameContainer").fadeIn();
             break;
-        case 'GetMove' :
-            opponent.lastmove = data.move;
+        case 'onMove' :
+            if (!myMove)
+            {
+                isOpponentPlayedFirst = true;
+                changeMessage(opponent.username + ' attend que vous fassiez un choix...');
+            }
+
+            if (!isOpponentPlayedFirst)
+            {
+                getResult(myMove, data.move);
+                changeMessage("En attente de " + opponent.username + "...");
+            }
+            else opponent.move = data.move;
             break;
+
+        case 'onWin' :
+            changeMessage(opponent.username+' à gagner cette partie');
+            break;
+
+        case 'onDraw' :
+            changeMessage('C\'est une égalité !');
+            break;
+
     }
 }
-
 
 MyPeer.on('open', id => {
 
@@ -61,6 +124,24 @@ MyPeer.on('open', id => {
                     onEvent(data)
                 }
             });
+
+            $('#choices').find('button').click((elem)=>{
+                $('#choices').find('button').prop('disabled', true);
+                let value = document.getElementById(elem.target.id).value;
+                myMove = value;
+                dataConnection.send({event:'onMove', move: value});
+                if (isOpponentPlayedFirst)
+                {
+                    if(getResult(myMove, opponent.move) >= 0)
+                    {
+                        dataConnection.send({event: "onWin"});
+                    }
+                    else
+                    {
+                        dataConnection.send({event: "onDraw"});
+                    }
+                }
+            })
 
             dataConnection.send({event: 'userInfo', username: username});
 
@@ -86,6 +167,24 @@ MyPeer.on('open', id => {
                     onEvent(data)
                 }
             });
+
+            $('#choices').find('button').click((elem)=>{
+                $('#choices').find('button').prop('disabled', true);
+                let value = document.getElementById(elem.target.id).value;
+                dataConnection.send({event:'onMove', move: value});
+                myMove = value;
+                if (isOpponentPlayedFirst)
+                {
+                    if(getResult(myMove, opponent.move) >= 0)
+                    {
+                        dataConnection.send({event: "onWin"});
+                    }
+                    else
+                    {
+                        dataConnection.send({event: "onDraw"});
+                    }
+                }
+            })
 
             dataConnection.send({event: 'userInfo', username: username});
 
